@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Kho học liệu — Video YouTube</title>
+  <link rel="stylesheet" href="./style.css?v=20260109b">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' ry='8' fill='%230a66ff'/%3E%3Ctext x='16' y='21' font-size='14' text-anchor='middle' fill='white' font-family='Arial'%3EAI%3C/text%3E%3C/svg%3E">
+  <style>
+    body{ background: linear-gradient(180deg,#eef6ff 0%, #f6fbff 60%, #ffffff 100%); }
+    .libWrap{ max-width: 1100px; margin: 18px auto; padding: 0 14px; }
+    .libCard{ border:1px solid var(--border); border-radius: 18px; background: rgba(255,255,255,.86); box-shadow: 0 14px 34px rgba(2,6,23,.08); overflow:hidden; }
+    .libHead{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding: 12px 14px; border-bottom:1px solid var(--border); }
+    .libHead h1{ margin:0; font-size:14px; font-weight:900; color:#0b3b7a; }
+    .libBody{ padding: 14px; }
+    .libRow{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .libRow .input{ flex:1 1 360px; }
+    .chipBtn{ border-radius:999px; padding:8px 10px; border:1px solid var(--border); background: rgba(255,255,255,.8); cursor:pointer; }
+    .chipBtn:hover{ background: rgba(255,255,255,.95); }
+    .ytFrame{ width:100%; aspect-ratio: 16/9; border:0; border-radius: 16px; background:#0b1220; }
+    .libNote{ font-size:12px; color:#0b3b7a; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner" style="justify-content:space-between;">
+      <div class="brand">
+        <div class="logo">AI</div>
+        <div class="hdrTitle">
+          <h1><span class="hdrLabel">Kho học liệu</span></h1>
+          <p>Tìm video bài học trên YouTube theo từ khóa • Chọn và xem ngay</p>
+        </div>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <a class="btn" href="./index.html" style="border-radius:999px; padding:10px 12px; text-decoration:none;">⬅ Quay lại</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="libWrap">
+    <div class="libCard">
+      <div class="libHead">
+        <h1>Tìm kiếm video</h1>
+        <a id="libLink" class="btn ghost" href="https://www.youtube.com" target="_blank" rel="noopener" style="border-radius:999px; padding:8px 10px; text-decoration:none;">Mở trên YouTube</a>
+      </div>
+      <div class="libBody">
+        <div class="libRow">
+          <input id="libQuery" class="input" placeholder="Nhập bài học, ví dụ: tổng 2 số python, if else python lớp 10..." />
+          <button id="libSearch" class="btn primary" style="border-radius:999px; padding:10px 14px;">Tìm</button>
+        </div>
+
+        <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="chipBtn" data-q="python lớp 10 bài tổng 2 số">Tổng 2 số</button>
+          <button class="chipBtn" data-q="python lớp 10 if else phân loại học lực">If/Else</button>
+          <button class="chipBtn" data-q="python lớp 10 vòng lặp for while bài tập">Vòng lặp</button>
+          <button class="chipBtn" data-q="python lớp 10 danh sách list bài tập">List</button>
+          <button class="chipBtn" data-q="python lớp 10 hàm def return bài tập">Hàm</button>
+        </div>
+
+        <div class="libNote" style="margin-top:10px;">
+          Gợi ý: Bạn có thể nhập tên bài trong hệ thống, ví dụ: <b>A4 phân loại học lực</b>, <b>prime</b>, <b>list</b>…
+        </div>
+
+        <div style="margin-top:12px;">
+          <iframe id="libFrame" class="ytFrame" allowfullscreen
+            src="https://www.youtube.com/embed?listType=search&list=python%20l%E1%BB%9Bp%2010%20b%C3%A0i%20t%E1%BA%ADp"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+(function(){
+  const qEl = document.getElementById('libQuery');
+  const frame = document.getElementById('libFrame');
+  const link = document.getElementById('libLink');
+
+  function setQuery(q){
+    q = (q||'').trim();
+    if(!q) return;
+    qEl.value = q;
+    const enc = encodeURIComponent(q);
+    frame.src = 'https://www.youtube.com/embed?listType=search&list=' + enc;
+    link.href = 'https://www.youtube.com/results?search_query=' + enc;
+    try{ localStorage.setItem('py10:lastLibQuery', q); }catch(e){}
+  }
+
+  document.getElementById('libSearch').addEventListener('click', ()=> setQuery(qEl.value));
+  qEl.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); setQuery(qEl.value);} });
+
+  document.querySelectorAll('.chipBtn').forEach(b=>{
+    b.addEventListener('click', ()=> setQuery(b.getAttribute('data-q')||''));
+  });
+
+  // Prefill from last lesson if available
+  let seed = '';
+  try{
+    seed = localStorage.getItem('py10:lastLessonTitle') || localStorage.getItem('py10:lastLibQuery') || '';
+  }catch(e){}
+  if(seed) setQuery(seed + ' python lớp 10');
+})();
+</script>
+</body>
+</html>
